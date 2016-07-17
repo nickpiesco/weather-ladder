@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: #fff;
+  font-family: 'Work Sans', sans-serif;
+}
+
+.background {
+  background-color: #888;
+}
+
+.current,
+.icon {
+  height: 28vh;
+}
+
+.weather {
+  align-items: stretch;
+  display: flex;
+  font-size: 2.5vh;
+  justify-content: center;
+  line-height: 1.2;
+  margin: 0 auto;
+  max-width: 30em;
+}
+
+.icon {
+  flex: 1;
+}
+
+.description {
+  flex: 2;
+  padding: 2vh 2vh 2vh 0;
+}
+
+.time-and-location {
+  margin-bottom: 1vh;
+}
+
+.temp {
+  display: block;
+  font-size: 10vh;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.forecast {
+  height: 6vh;
+}

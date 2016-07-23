@@ -1,3 +1,5 @@
+var API_KEY = [API key goes here];
+
 // Poor man’s jQuery
 var $ = document.querySelector.bind(document);
 
@@ -10,9 +12,9 @@ var $ = document.querySelector.bind(document);
 function ajax (url, successCallback) {
   var req = new XMLHttpRequest();
   req.open('GET', url, true);
-  req.setRequestHeader("Content-type", "application/json");
+  // req.setRequestHeader("Content-type", "application/json");
 
-  req.onload = function() {
+  req.onload = function () {
     if (req.status >= 200 && req.status < 400) {
       var data = JSON.parse(req.responseText);
       successCallback(data);
@@ -21,7 +23,7 @@ function ajax (url, successCallback) {
     }
   };
 
-  req.onerror = function() {
+  req.onerror = function () {
     console.error('Sorry, there was a connection error.')
   };
 
@@ -99,13 +101,26 @@ function getTime () {
 }
 
 /**
- * Request data from the API
+ * Get current location and request data from the API
  * @param {string} source - Endpoint URL
  * @returns {object}
  */
-function getWeather (source) {
-  ajax(source, function (data) {
-    renderWeather(data);
+function getWeather () {
+  navigator.geolocation.getCurrentPosition(function (position) {
+    var lat = position.coords.latitude;
+    var long = position.coords.longitude;
+
+    // Using a CORS proxy because I didn’t want to use jQuery for JSONP
+    // or faff about with a server-side proxy of my own
+    var proxy = 'http://crossorigin.me/';
+
+    var url = proxy + 'https://api.forecast.io/forecast/' + API_KEY + '/' +
+      lat + ',' + long;
+
+    // Make the request
+    ajax(url, function (data) {
+      renderWeather(data);
+    });
   });
 }
 
@@ -156,7 +171,6 @@ function weatherModel (data) {
   return weather;
 }
 
-
 /**
  * Choose the correct icon and colours
  * @param {object} data - Our current weather object
@@ -191,7 +205,8 @@ function renderWeather (data) {
 
 function initialize () {
   getTime();
-  getWeather('js/katt.json');
+  // getWeather('js/katt.json');
+  getWeather();
 }
 
 initialize();

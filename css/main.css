@@ -1,13 +1,90 @@
+/* Poor man’s reset */
 * {
   margin: 0;
   padding: 0;
 }
+
+/* Keyframes for gradient and icon animations */
+
+@keyframes transition-gradient {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -900vh, 0);
+  }
+}
+
+@keyframes spin-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Main styles */
 
 body {
   color: #fff;
   font-family: 'Work Sans', sans-serif;
 }
 
+.splash {
+  overflow: hidden;
+  pointer-events: none; /* This would remain clickable, even if faded out */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+.splash.fade-out {
+  opacity: 0;
+}
+
+.splash-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: absolute;
+  width: 100vw;
+  z-index: 2;
+}
+
+.splash-icon {
+  animation: spin-icon linear 5s infinite;
+  height: 50vh;
+  width: 50vw;
+}
+
+/* Since we can’t directly transform the gradient, we’re going to create
+  a huge div and just move it around slowly */
+.splash-gradient {
+  animation: transition-gradient linear 50s infinite alternate;
+  background-image: linear-gradient(
+    to bottom,
+    #e80086,
+    #2e0086 10%,
+    #11000c 20%,
+    #18c8dc 30%,
+    #0def00 40%,
+    #004d00 50%,
+    #e8f800 60%,
+    #ff5200 70%,
+    #ff0f00 80%,
+    #8f0000 90%,
+    #360040 100%);
+  display: flex;
+  height: 1000vh;
+}
+
+/* Just in case */
 .background {
   background-color: #888;
 }
@@ -18,10 +95,10 @@ body {
 }
 
 .weather {
-  align-items: stretch;
   display: flex;
-  font-size: 2.5vh;
+  align-items: stretch;
   justify-content: center;
+  font-size: 2.5vh;
   line-height: 1.2;
   margin: 0 auto;
   max-width: 30em;

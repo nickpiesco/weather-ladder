@@ -252,11 +252,16 @@ function renderWeather (data) {
     $('.js-forecast-' + i).style.backgroundColor =
       getColor(weather.forecast[i].forecastTemp);
   }
+
+  // Remove the splash, since hopefully we’re all done processing by now
+  $('.js-splash').className += ' fade-out';
 }
 
 function initialize () {
   getTime();
-  // getWeather('js/katt.json');
+  // ajax('js/katt.json', function (data) {
+  //   renderWeather(data);
+  // });
   getLocation();
 }
 

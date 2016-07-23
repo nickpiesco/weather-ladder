@@ -1,6 +1,12 @@
 // Poor man’s jQuery
 var $ = document.querySelector.bind(document);
 
+/**
+ * Fairly standard XHR gubbins
+ * @param {string} url - Endpoint URL
+ * @param {function} successCallback - Function to execute on success
+ * @returns {object}
+ */
 function ajax (url, successCallback) {
   var req = new XMLHttpRequest();
   req.open('GET', url, true);
@@ -22,6 +28,11 @@ function ajax (url, successCallback) {
   req.send();
 }
 
+/**
+ * Calculate background colour based on temperature
+ * @param {number} temp - Temperature to calculate value from
+ * @returns {string}
+ */
 function getColor (temp) {
   var Color = net.brehaut.Color;
   
@@ -71,8 +82,6 @@ function getColor (temp) {
   // we have a digit, but we need a value between 0 and 1.
   var alpha = splitTemp[1] / 10 || 0;
 
-  // Time to make the chimichangas
-
   // Grab the corresponding values from the object
   var color1 = Color(tempBins[lowerBound.toString()]);
   var color2 = Color(tempBins[upperBound.toString()]);
@@ -81,19 +90,33 @@ function getColor (temp) {
   return color1.blend(color2, alpha).toCSS();
 }
 
+/**
+ * Gets system time and writes it to the DOM
+ */
 function getTime () {
   var currentTime = moment().format('h:mm a');
   $('.js-time').innerHTML = currentTime;
 }
 
-
+/**
+ * Request data from the API
+ * @param {string} source - Endpoint URL
+ * @returns {object}
+ */
 function getWeather (source) {
   ajax(source, function (data) {
     renderWeather(data);
   });
 }
 
+/**
+ * Munge data from the API response into something we can use
+ * @param {object} data - API response
+ * @returns {object}
+ */
 function weatherModel (data) {
+
+  // Our model
   var weather = {
     currentIcon: '',
     currentWeather: '',
@@ -115,34 +138,60 @@ function weatherModel (data) {
     ]
   };
   
+  // Tuck API response bits into the correct places
   weather.currentIcon = data.currently.icon || 'default';
   weather.currentWeather = data.currently.summary;
+
+  // ‘getColor()’ expects an integer, so we’ll just do this now
   weather.currentTemp = Math.round(data.currently.temperature);
 
+  // Loop over forecast data to populate our ‘forecast’ array
+  // (the API returns more than 12 hours’ worth of data, but
+  // we just ignore what we don’t need)
   for (i = 0; i < weather.forecast.length; i++) {
-    weather.forecast[i].forecastTemp = Math.round(data.hourly.data[i].temperature);
+    weather.forecast[i].forecastTemp =
+      Math.round(data.hourly.data[i].temperature);
   }
 
   return weather;
 }
 
+
+/**
+ * Choose the correct icon and colours
+ * @param {object} data - Our current weather object
+ */
 function renderWeather (data) {
+
+  // Get our model
   var weather = weatherModel(data);
 
+  // Populate temperature and current conditions
   $('.js-temp').innerHTML = weather.currentTemp;
   $('.js-weather').innerHTML = weather.currentWeather;
 
+  // Get filename of the correct icon (or not)
   var defaultIconPath = 'images/icons/default.svg';
   var currentIconPath = 'images/icons/' + weather.currentIcon + '.svg';
-  $('.js-icon').src = $('.js-icon').src.replace(defaultIconPath, currentIconPath);
 
+  // Replace default icon with the correct one
+  $('.js-icon').src = $('.js-icon').src
+    .replace(defaultIconPath, currentIconPath);
+
+  // Colour the current conditions background
   $('.js-current').style.backgroundColor = getColor(weather.currentTemp);
 
-  // Starting with 1 and not 0 because data[0] is current
+  // Colour the forecast backgrounds
+  // (starting the loop with 1 and not 0 because data[0] is current)
   for (i = 1; i < weather.forecast.length; i++) {
-    $('.js-forecast-' + i).style.backgroundColor = getColor(weather.forecast[i].forecastTemp);
+    $('.js-forecast-' + i).style.backgroundColor =
+      getColor(weather.forecast[i].forecastTemp);
   }
 }
 
-getTime();
-getWeather('js/katt.json');
+function initialize () {
+  getTime();
+  getWeather('js/katt.json');
+}
+
+initialize();

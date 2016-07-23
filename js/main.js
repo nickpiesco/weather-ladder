@@ -12,7 +12,7 @@ var $ = document.querySelector.bind(document);
 function ajax (url, successCallback) {
   var req = new XMLHttpRequest();
   req.open('GET', url, true);
-  // req.setRequestHeader("Content-type", "application/json");
+  req.setRequestHeader("Content-type", "application/json");
 
   req.onload = function () {
     if (req.status >= 200 && req.status < 400) {
@@ -101,26 +101,60 @@ function getTime () {
 }
 
 /**
- * Get current location and request data from the API
- * @param {string} source - Endpoint URL
+ * Get current location and send it to the API request
+ */
+function getLocation () {
+
+  // Bypass geolocation if we’ve already been here –
+  // naïve cookie implementation incoming!
+  var cookie = document.cookie;
+
+  // Make sure we’re getting the correct cookie (‘position’)
+  if (cookie.split('=')[0] === 'position') {
+    var positionFromCookie = cookie.split('=')[1].split(',');
+
+    lat = positionFromCookie[0];
+    long = positionFromCookie[1];
+
+    // See below as to why this is inside the conditional and not outside
+    requestWeather(lat, long);
+  } else {
+
+    // Use browser geolocation
+    navigator.geolocation.getCurrentPosition(function (position) {
+
+      lat = position.coords.latitude;
+      long = position.coords.longitude;
+
+      // Set a cookie so we don’t have to do this again
+      document.cookie = 'position=' + lat + ',' + long;
+
+      // This needs to be here and not outside the conditional
+      // to keep the API call from choking on undefined lat and long
+      // until the browser finds a position (a few seconds)
+      requestWeather(lat, long);
+    });
+  }
+}
+
+/**
+ * Request weather for the given location
+ * @param {number} lat - Latitude
+ * @param {number} long - Longitude
  * @returns {object}
  */
-function getWeather () {
-  navigator.geolocation.getCurrentPosition(function (position) {
-    var lat = position.coords.latitude;
-    var long = position.coords.longitude;
+function requestWeather (lat, long) {
 
-    // Using a CORS proxy because I didn’t want to use jQuery for JSONP
-    // or faff about with a server-side proxy of my own
-    var proxy = 'http://crossorigin.me/';
+  // Using a CORS proxy because I didn’t want to use jQuery for JSONP
+  // or faff about with a server-side proxy of my own
+  var proxy = 'http://crossorigin.me/';
 
-    var url = proxy + 'https://api.forecast.io/forecast/' + API_KEY + '/' +
-      lat + ',' + long;
+  var url = proxy + 'https://api.forecast.io/forecast/' + API_KEY + '/' +
+    lat + ',' + long;
 
-    // Make the request
-    ajax(url, function (data) {
-      renderWeather(data);
-    });
+  // Make the request
+  ajax(url, function (data) {
+    renderWeather(data);
   });
 }
 
@@ -206,7 +240,7 @@ function renderWeather (data) {
 function initialize () {
   getTime();
   // getWeather('js/katt.json');
-  getWeather();
+  getLocation();
 }
 
 initialize();

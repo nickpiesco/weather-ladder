@@ -116,8 +116,9 @@ function getLocation () {
     lat = positionFromCookie[0];
     long = positionFromCookie[1];
 
-    // See below as to why this is inside the conditional and not outside
+    // See below as to why these are inside the conditional and not outside
     requestWeather(lat, long);
+    renderLocation(lat, long);
   } else {
 
     // Use browser geolocation
@@ -129,19 +130,35 @@ function getLocation () {
       // Set a cookie so we don’t have to do this again
       document.cookie = 'position=' + lat + ',' + long;
 
-      // This needs to be here and not outside the conditional
-      // to keep the API call from choking on undefined lat and long
+      // These need to be here and not outside the conditional
+      // to keep the API calls from choking on undefined ‘lat’ and ‘long’
       // until the browser finds a position (a few seconds)
       requestWeather(lat, long);
+      renderLocation(lat, long);
     });
   }
+}
+
+/**
+ * Write human-readable location to the DOM
+ * @param {number} lat - Latitude
+ * @param {number} long - Longitude
+ */
+function renderLocation (lat, long) {
+  var url = 'http://nominatim.openstreetmap.org/reverse?format=json&lat=' +
+    lat + '&lon=' + long;
+
+  ajax(url, function (response) {
+
+    // Using ‘city’ is a little brittle, but it’ll work for now
+    $('.js-location').innerHTML = response.address.city;
+  });
 }
 
 /**
  * Request weather for the given location
  * @param {number} lat - Latitude
  * @param {number} long - Longitude
- * @returns {object}
  */
 function requestWeather (lat, long) {
 

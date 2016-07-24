@@ -31,21 +31,21 @@ function ajax (url, successCallback) {
 }
 
 /**
- * Opens the modal
+ * Show splash screen or modal
  */
- function openModal () {
-  var modal = $('.js-modal');
+ function showFullscreen (className) {
+  var element = $('.' + className);
 
-  modal.classList.add('fullscreen-open');
+  element.classList.add('fullscreen-open');
 }
 
 /**
- * Closes the modal (also does double-duty for the splash screen)
+ * Hide splash screen or modal
  */
-function closeModal () {
-  var modal = $('.js-modal');
+function hideFullscreen (className) {
+  var element = $('.' + className);
 
-  modal.classList.remove('fullscreen-open');
+  element.classList.remove('fullscreen-open');
 }
 
 /**
@@ -174,6 +174,21 @@ function renderLocation (lat, long) {
 }
 
 /**
+ * Clear cookie and initialise again to re-fetch location
+ */
+function resetLocation () {
+
+  // Remove existing cookie
+  document.cookie = 'position=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+  // Close modal
+  hideFullscreen('js-modal');
+
+  // Fire geolocation again
+  initialize();
+}
+
+/**
  * Request weather for the given location
  * @param {number} lat - Latitude
  * @param {number} long - Longitude
@@ -272,28 +287,33 @@ function renderWeather (data) {
   }
 
   // Remove the splash, since hopefully we’re all done processing by now
-  $('.js-splash').classList.remove('fullscreen-open');
+  hideFullscreen('js-splash');
 }
 
 /**
  * Initialise the application
  */
 function initialize () {
+  showFullscreen('js-splash'); // Make sure splash screen shows while we load
   getTime();
-  ajax('js/katt.json', function (data) {
-    renderWeather(data);
-  });
-  // getLocation();
+  // ajax('js/katt.json', function (data) {
+  //   renderWeather(data);
+  // });
+  getLocation();
 }
 
 // Event listeners
 
 $('.js-open-modal').addEventListener('click', function () {
-  openModal();
+  showFullscreen('js-modal');
 });
 
 $('.js-close-modal').addEventListener('click', function () {
-  closeModal();
+  hideFullscreen('js-modal');
+});
+
+$('.js-reset-location').addEventListener('click', function () {
+  resetLocation();
 });
 
 // Time to make the chimichangas

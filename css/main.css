@@ -29,10 +29,42 @@
 body {
   color: #fff;
   font-family: 'Work Sans', sans-serif;
+  font-size: 2.5vh;
+  line-height: 1.2;
+  overflow: hidden;
 }
 
-.splash {
-  overflow: hidden;
+a {
+  color: #fff;
+}
+
+button {
+  background: none;
+  border: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: center;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.button {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  font-size: 4vh;
+  margin-bottom: 10vh;
+  padding: 2vh 4vh;
+}
+
+.button:active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.fullscreen {
+  opacity: 0;
   pointer-events: none; /* This would remain clickable, even if faded out */
   position: absolute;
   top: 0;
@@ -40,11 +72,16 @@ body {
   left: 0;
   right: 0;
   transition: opacity 0.5s ease;
-  z-index: 1;
 }
 
-.splash.fade-out {
-  opacity: 0;
+.fullscreen-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.splash {
+  overflow: hidden;
+  z-index: 1;
 }
 
 .splash-content {
@@ -84,9 +121,42 @@ body {
   height: 1000vh;
 }
 
-/* Just in case */
+.modal {
+  background-image: linear-gradient(
+    to bottom,
+    #8f0000,
+    #360040 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.open-modal,
+.close-modal {
+  position: absolute;
+}
+
+.open-modal {
+  top: -5vh;
+  right: -6vh;
+}
+
+.open-modal-icon {
+  height: 22vh;
+}
+
+.close-modal {
+  font-size: 10vh;
+  position: absolute;
+  top: 0;
+  right: 2vh;
+}
+
 .background {
-  background-color: #888;
+  background-color: #888; /* Just in case */
+  overflow: hidden;
 }
 
 .current,
@@ -98,8 +168,6 @@ body {
   display: flex;
   align-items: stretch;
   justify-content: center;
-  font-size: 2.5vh;
-  line-height: 1.2;
   margin: 0 auto;
   max-width: 30em;
 }

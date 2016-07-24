@@ -8,7 +8,7 @@
 </head>
 
   <body>
-    <section class="splash js-splash">
+    <section class="fullscreen splash js-splash fullscreen-open">
       <div class="splash-content">
         <img class="splash-icon" src="images/icons/clear-day.svg" style="filter: invert(100%); -webkit-filter: (100%);">
       </div>
@@ -16,6 +16,9 @@
       </div>
     </section>
     <section class="background current js-current">
+      <button class="open-modal js-open-modal">
+        <img class="open-modal-icon" src="images/icons/compass.svg" alt="Reset Location" style="filter: invert(100%); -webkit-filter: (100%);">
+      </button>
       <div class="weather">
         <img class="icon js-icon" src="images/icons/default.svg" alt="Partly Cloudy" style="filter: invert(100%); -webkit-filter: (100%);">
         <div class="description">
@@ -43,6 +46,17 @@
     <section class="background forecast js-forecast-10"></section>
     <section class="background forecast js-forecast-11"></section>
     <section class="background forecast js-forecast-12"></section>
+    <section class="fullscreen modal js-modal">
+      <button class="close-modal js-close-modal">
+        &times;
+      </button>
+      <button class="button reset-location js-reset-location">
+        Reset location
+      </button>
+      <p>
+        <a href="https://github.com">Open source</a> &bull; Powered by <a href="http://forecast.io/">Forecast</a> and <a href="http://nominatim.openstreetmap.org/">OpenStreetMap</a>
+      </p>
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-js/1.0.1/color.min.js"></script>

@@ -31,6 +31,24 @@ function ajax (url, successCallback) {
 }
 
 /**
+ * Opens the modal
+ */
+ function openModal () {
+  var modal = $('.js-modal');
+
+  modal.classList.add('fullscreen-open');
+}
+
+/**
+ * Closes the modal (also does double-duty for the splash screen)
+ */
+function closeModal () {
+  var modal = $('.js-modal');
+
+  modal.classList.remove('fullscreen-open');
+}
+
+/**
  * Calculate background colour based on temperature
  * @param {number} temp - Temperature to calculate value from
  * @returns {string}
@@ -254,15 +272,29 @@ function renderWeather (data) {
   }
 
   // Remove the splash, since hopefully we’re all done processing by now
-  $('.js-splash').className += ' fade-out';
+  $('.js-splash').classList.remove('fullscreen-open');
 }
 
+/**
+ * Initialise the application
+ */
 function initialize () {
   getTime();
-  // ajax('js/katt.json', function (data) {
-  //   renderWeather(data);
-  // });
-  getLocation();
+  ajax('js/katt.json', function (data) {
+    renderWeather(data);
+  });
+  // getLocation();
 }
 
+// Event listeners
+
+$('.js-open-modal').addEventListener('click', function () {
+  openModal();
+});
+
+$('.js-close-modal').addEventListener('click', function () {
+  closeModal();
+});
+
+// Time to make the chimichangas
 initialize();

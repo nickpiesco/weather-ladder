@@ -34,6 +34,11 @@ body {
   overflow: hidden;
 }
 
+img {
+  -webkit-filter: invert(100%);
+          filter: invert(100%);
+}
+
 a {
   color: #fff;
 }
@@ -44,6 +49,7 @@ button {
   color: #fff;
   font-family: inherit;
   font-size: inherit;
+  outline: none;
   text-align: center;
 }
 

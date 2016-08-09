@@ -34,11 +34,6 @@ body {
   overflow: hidden;
 }
 
-img {
-  -webkit-filter: invert(100%);
-          filter: invert(100%);
-}
-
 a {
   color: #fff;
 }

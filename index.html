@@ -5,22 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:400,600">
     <link rel="stylesheet" href="css/main.css">
-</head>
+  </head>
 
   <body>
     <section class="fullscreen splash js-splash fullscreen-open">
       <div class="splash-content">
-        <img class="splash-icon" src="images/icons/clear-day.svg">
+        <img class="splash-icon" src="images/icons/clear-day.svg" alt="Loading...">
       </div>
       <div class="splash-gradient">
       </div>
     </section>
+
     <section class="background current js-current">
       <button class="open-modal js-open-modal">
-        <img class="open-modal-icon" src="images/icons/compass.svg" alt="Reset Location">
+        <img class="open-modal-icon" src="images/icons/compass.svg" alt="Reset location">
       </button>
       <div class="weather">
-        <img class="icon js-icon" src="images/icons/default.svg" alt="Partly Cloudy">
+        <img class="icon js-icon" src="images/icons/default.svg" alt="Current weather">
         <div class="description">
           <div class="time-and-location">
             <span class="js-time"></span><br>
@@ -46,7 +47,8 @@
     <section class="background forecast js-forecast-10"></section>
     <section class="background forecast js-forecast-11"></section>
     <section class="background forecast js-forecast-12"></section>
-    <section class="fullscreen modal js-modal">
+
+    <section class="fullscreen modal location-modal js-modal">
       <button class="close-modal js-close-modal">
         &times;
       </button>
@@ -55,6 +57,13 @@
       </button>
       <p>
         <a href="https://github.com/nickpiesco/weather-ladder">Source on GitHub</a> &bull; Powered by <a href="http://forecast.io/">Forecast</a> and <a href="http://nominatim.openstreetmap.org/">OpenStreetMap</a>
+      </p>
+    </section>
+
+    <section class="fullscreen modal error-modal js-error">
+      <img class="error-icon" src="/images/icons/umbrella.svg" alt="Sorry...">
+      <p>
+        Sorry, there was an error. Please refresh or try again later.
       </p>
     </section>
 

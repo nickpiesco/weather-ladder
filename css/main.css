@@ -123,10 +123,6 @@ button:hover {
 }
 
 .modal {
-  background-image: linear-gradient(
-    to bottom,
-    #8f0000,
-    #360040 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -155,6 +151,22 @@ button:hover {
   position: absolute;
   top: 0;
   right: 2vh;
+}
+
+.location-modal {
+  background-image: linear-gradient(
+    to bottom,
+    #8f0000,
+    #360040 100%);
+}
+
+.error-modal {
+  background: #888;
+}
+
+.error-icon {
+  height: 28vh;
+  margin-top: -14vh; /* Compensates for canvas padding */
 }
 
 .background {

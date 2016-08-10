@@ -19,12 +19,12 @@ function ajax (url, successCallback) {
       var data = JSON.parse(req.responseText);
       successCallback(data);
     } else {
-      console.error('Sorry, the request returned an error.')
+      showErrorMessage();
     }
   };
 
   req.onerror = function () {
-    console.error('Sorry, there was a connection error.')
+    showErrorMessage();
   };
 
   req.send();
@@ -209,6 +209,13 @@ function requestWeather (lat, long) {
 }
 
 /**
+ * Show error message
+ */
+function showErrorMessage () {
+  showFullscreen('js-error');
+}
+
+/**
  * Munge data from the API response into something we can use
  * @param {object} data - API response
  * @returns {object}
@@ -296,9 +303,6 @@ function renderWeather (data) {
 function initialize () {
   showFullscreen('js-splash'); // Make sure splash screen shows while we load
   getTime();
-  // ajax('js/katt.json', function (data) {
-  //   renderWeather(data);
-  // });
   getLocation();
 }
 

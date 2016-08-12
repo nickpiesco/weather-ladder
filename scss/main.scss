@@ -1,0 +1,220 @@
+// Poor man’s reset
+* {
+  margin: 0;
+  padding: 0;
+}
+
+// Keyframes for gradient and icon animations
+
+@keyframes transition-gradient {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -900vh, 0);
+  }
+}
+
+@keyframes spin-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Placeholders for splash, modal, and error message
+
+%fullscreen {
+  opacity: 0;
+  pointer-events: none; // This would remain clickable, even if faded out
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: opacity 0.5s ease;
+}
+
+%modal {
+  @extend %fullscreen;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  z-index: 2;
+}
+
+// Main styles
+
+body {
+  color: #fff;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 2.5vh;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+a {
+  color: #fff;
+}
+
+button {
+  background: none;
+  border: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.button {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  font-size: 4vh;
+  margin-bottom: 10vh;
+  padding: 2vh 4vh;
+  &:active {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Splash, modal, and error styles
+
+.fullscreen-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.open-modal,
+.close-modal {
+  position: absolute;
+}
+
+.open-modal {
+  top: -5vh;
+  right: -6vh;
+}
+
+.open-modal-icon {
+  height: 22vh;
+}
+
+.close-modal {
+  font-size: 10vh;
+  position: absolute;
+  top: 0;
+  right: 2vh;
+}
+
+.splash {
+  @extend %fullscreen;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.splash-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: absolute;
+  width: 100vw;
+  z-index: 2;
+}
+
+.splash-icon {
+  animation: spin-icon linear 5s infinite;
+  height: 50vh;
+  width: 50vw;
+}
+
+// Since we can’t directly transform the gradient, we’re going to create
+// a huge div and just move it around slowly
+.splash-gradient {
+  animation: transition-gradient linear 50s infinite alternate;
+  background-image: linear-gradient(
+    to bottom,
+    #e80086,
+    #2e0086 10%,
+    #11000c 20%,
+    #18c8dc 30%,
+    #0def00 40%,
+    #004d00 50%,
+    #e8f800 60%,
+    #ff5200 70%,
+    #ff0f00 80%,
+    #8f0000 90%,
+    #360040 100%);
+  display: flex;
+  height: 1000vh;
+}
+
+.location-modal {
+  @extend %modal;
+  background-image: linear-gradient(
+    to bottom,
+    #8f0000,
+    #360040 100%);
+}
+
+.error-message {
+  @extend %modal;
+  background: #888;
+}
+
+.error-icon {
+  height: 28vh;
+  margin-top: -14vh; // Compensates for canvas padding
+}
+
+// Main application styles
+
+.background {
+  background-color: #888; // Just in case
+  overflow: hidden;
+}
+
+.current,
+.icon {
+  height: 28vh;
+}
+
+.weather {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 30em;
+}
+
+.icon {
+  flex: 1;
+}
+
+.description {
+  flex: 2;
+  padding: 2vh 2vh 2vh 0;
+}
+
+.time-and-location {
+  margin-bottom: 1vh;
+}
+
+.temp {
+  display: block;
+  font-size: 10vh;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.forecast {
+  height: 6vh;
+}

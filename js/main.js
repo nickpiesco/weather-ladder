@@ -4,30 +4,43 @@ var API_KEY = [API key goes here];
 var $ = document.querySelector.bind(document);
 
 /**
+ * Utility functions
+ */
+
+/**
  * Fairly standard XHR gubbins
  * @param {string} url - Endpoint URL
  * @param {function} successCallback - Function to execute on success
  * @returns {object}
  */
 function ajax (url, successCallback) {
-  var req = new XMLHttpRequest();
-  req.open('GET', url, true);
-  req.setRequestHeader("Content-type", "application/json");
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.setRequestHeader("Content-type", "application/json");
 
-  req.onload = function () {
-    if (req.status >= 200 && req.status < 400) {
-      var data = JSON.parse(req.responseText);
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 400) {
+      var data = JSON.parse(xhr.responseText);
       successCallback(data);
     } else {
       showErrorMessage();
     }
   };
 
-  req.onerror = function () {
+  xhr.onerror = function () {
     showErrorMessage();
   };
 
-  req.send();
+  xhr.send();
+}
+
+/**
+ * Hide splash screen or modal
+ */
+function hideFullscreen (className) {
+  var element = $('.' + className);
+
+  element.classList.remove('fullscreen-open');
 }
 
 /**
@@ -40,13 +53,8 @@ function ajax (url, successCallback) {
 }
 
 /**
- * Hide splash screen or modal
+ * Application guts
  */
-function hideFullscreen (className) {
-  var element = $('.' + className);
-
-  element.classList.remove('fullscreen-open');
-}
 
 /**
  * Calculate background colour based on temperature
@@ -91,7 +99,7 @@ function getColor (temp) {
   // We need to find the tens digit[s] of the temperature
   // to put it in the appropriate bin and save the ones digit
   // to send to ‘blend()’ below as the ‘alpha’ property
-  var splitTemp = ((temp / 10).toString()).split('.')  || 0;
+  var splitTemp = ((temp / 10).toString()).split('.') || 0;
 
   // Break off the tens digit[s] to get the bounds of the bin
   var lowerBound = splitTemp[0] * 10;
@@ -108,14 +116,6 @@ function getColor (temp) {
 
   // Return blended colour
   return color1.blend(color2, alpha).toCSS();
-}
-
-/**
- * Gets system time and writes it to the DOM
- */
-function getTime () {
-  var currentTime = moment().format('h:mm a');
-  $('.js-time').innerHTML = currentTime;
 }
 
 /**
@@ -158,6 +158,14 @@ function getLocation () {
 }
 
 /**
+ * Gets system time and writes it to the DOM
+ */
+function getTime () {
+  var currentTime = moment().format('h:mm a');
+  $('.js-time').innerHTML = currentTime;
+}
+
+/**
  * Write human-readable location to the DOM
  * @param {number} lat - Latitude
  * @param {number} long - Longitude
@@ -174,18 +182,38 @@ function renderLocation (lat, long) {
 }
 
 /**
- * Clear cookie and initialise again to re-fetch location
+ * Choose the correct icon and colours
+ * @param {object} data - Our current weather object
  */
-function resetLocation () {
+function renderWeather (data) {
 
-  // Remove existing cookie
-  document.cookie = 'position=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  // Get our model
+  var weather = weatherModel(data);
 
-  // Close modal
-  hideFullscreen('js-modal');
+  // Populate temperature and current conditions
+  $('.js-temp').innerHTML = weather.currentTemp;
+  $('.js-weather').innerHTML = weather.currentWeather;
 
-  // Fire geolocation again
-  initialize();
+  // Get filename of the correct icon (or not)
+  var defaultIconPath = 'images/icons/default.svg';
+  var currentIconPath = 'images/icons/' + weather.currentIcon + '.svg';
+
+  // Replace default icon with the correct one
+  $('.js-icon').src = $('.js-icon').src
+    .replace(defaultIconPath, currentIconPath);
+
+  // Colour the current conditions background
+  $('.js-current').style.backgroundColor = getColor(weather.currentTemp);
+
+  // Colour the forecast backgrounds
+  // (starting the loop with 1 and not 0 because data[0] is current)
+  for (i = 1; i < weather.forecast.length; i++) {
+    $('.js-forecast-' + i).style.backgroundColor =
+      getColor(weather.forecast[i].forecastTemp);
+  }
+
+  // Remove the splash, since hopefully we’re all done processing by now
+  hideFullscreen('js-splash');
 }
 
 /**
@@ -206,6 +234,21 @@ function requestWeather (lat, long) {
   ajax(url, function (data) {
     renderWeather(data);
   });
+}
+
+/**
+ * Clear cookie and initialise again to re-fetch location
+ */
+function resetLocation () {
+
+  // Remove existing cookie
+  document.cookie = 'position=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+  // Close modal
+  hideFullscreen('js-modal');
+
+  // Fire geolocation again
+  initialize();
 }
 
 /**
@@ -263,42 +306,7 @@ function weatherModel (data) {
 }
 
 /**
- * Choose the correct icon and colours
- * @param {object} data - Our current weather object
- */
-function renderWeather (data) {
-
-  // Get our model
-  var weather = weatherModel(data);
-
-  // Populate temperature and current conditions
-  $('.js-temp').innerHTML = weather.currentTemp;
-  $('.js-weather').innerHTML = weather.currentWeather;
-
-  // Get filename of the correct icon (or not)
-  var defaultIconPath = 'images/icons/default.svg';
-  var currentIconPath = 'images/icons/' + weather.currentIcon + '.svg';
-
-  // Replace default icon with the correct one
-  $('.js-icon').src = $('.js-icon').src
-    .replace(defaultIconPath, currentIconPath);
-
-  // Colour the current conditions background
-  $('.js-current').style.backgroundColor = getColor(weather.currentTemp);
-
-  // Colour the forecast backgrounds
-  // (starting the loop with 1 and not 0 because data[0] is current)
-  for (i = 1; i < weather.forecast.length; i++) {
-    $('.js-forecast-' + i).style.backgroundColor =
-      getColor(weather.forecast[i].forecastTemp);
-  }
-
-  // Remove the splash, since hopefully we’re all done processing by now
-  hideFullscreen('js-splash');
-}
-
-/**
- * Initialise the application
+ * Initialize the application
  */
 function initialize () {
   showFullscreen('js-splash'); // Make sure splash screen shows while we load

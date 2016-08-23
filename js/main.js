@@ -1,7 +1,14 @@
 var API_KEY = [API key goes here];
 
-// Poor man’s jQuery
+/**
+ * Poor man’s jQuery
+ */
 var $ = document.querySelector.bind(document);
+
+/**
+ * Make Color globally available
+ */
+var Color = net.brehaut.Color;
 
 /**
  * Utility functions
@@ -62,7 +69,6 @@ function hideFullscreen (className) {
  * @returns {string}
  */
 function getColor (temp) {
-  var Color = net.brehaut.Color;
   
   // Temperature gradient stops. We’re going to find the bin
   // the temperature goes into, then use ‘blend()’ to interpolate
@@ -202,8 +208,19 @@ function renderWeather (data) {
   $('.js-icon').src = $('.js-icon').src
     .replace(defaultIconPath, currentIconPath);
 
-  // Colour the current conditions background
-  $('.js-current').style.backgroundColor = getColor(weather.currentTemp);
+  // Colour the current conditions background and change
+  // the text and icon colour based on its luminance
+  var currentTempColor = getColor(weather.currentTemp);
+  var backgroundLuminance = Color(currentTempColor).getLuminance();
+
+  $('.js-current').style.backgroundColor = currentTempColor;
+
+  // Color’s function is slightly different, but I pulled
+  // the ‘0.65’ magic number from here:
+  // https://gist.github.com/jlong/f06f5843104ee10006fe
+  if (backgroundLuminance > 0.65) {
+    $('.js-current').classList.add('dark');
+  }
 
   // Colour the forecast backgrounds
   // (starting the loop with 1 and not 0 because data[0] is current)
@@ -314,7 +331,9 @@ function initialize () {
   getLocation();
 }
 
-// Event listeners
+/**
+ * Event listeners
+ */
 
 $('.js-open-modal').addEventListener('click', function () {
   showFullscreen('js-modal');
@@ -328,5 +347,7 @@ $('.js-reset-location').addEventListener('click', function () {
   resetLocation();
 });
 
-// Time to make the chimichangas
+/**
+ * Time to make the chimichangas
+ */
 initialize();

@@ -187,16 +187,27 @@ button {
   height: 28vh;
 }
 
+// Invert text and icons if the background is too light
+.current {
+  &.dark {
+    color: #333;
+    img {
+      -webkit-filter: invert(80%);
+              filter: invert(80%);
+    }
+  }
+}
+
+.icon {
+  flex: 1;
+}
+
 .weather {
   display: flex;
   align-items: stretch;
   justify-content: center;
   margin: 0 auto;
   max-width: 30em;
-}
-
-.icon {
-  flex: 1;
 }
 
 .description {

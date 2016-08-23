@@ -1,3 +1,7 @@
+# Redirect to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 # Use path from Git
 RewriteCond %{REQUEST_URI} !weather-ladder/
 RewriteRule ^(.*)$ /weather-ladder/$1 [L]

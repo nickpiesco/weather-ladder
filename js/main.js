@@ -171,7 +171,7 @@ function getTime () {
  * @param {number} long - Longitude
  */
 function renderLocation (lat, long) {
-  var url = 'http://nominatim.openstreetmap.org/reverse?format=json&lat=' +
+  var url = '//nominatim.openstreetmap.org/reverse?format=json&lat=' +
     lat + '&lon=' + long;
 
   ajax(url, function (response) {
@@ -225,7 +225,7 @@ function requestWeather (lat, long) {
 
   // Using a CORS proxy because I didn’t want to use jQuery for JSONP
   // or faff about with a server-side proxy of my own
-  var proxy = 'http://crossorigin.me/';
+  var proxy = '//crossorigin.me/';
 
   var url = proxy + 'https://api.forecast.io/forecast/' + API_KEY + '/' +
     lat + ',' + long;

@@ -182,8 +182,8 @@ function renderLocation (lat, long) {
 
   ajax(url, function (response) {
 
-    // Using ‘city’ is a little brittle, but it’ll work for now
-    $('.js-location').innerHTML = response.address.city;
+    // Fallbacks here are complex. Punt!
+    $('.js-location').innerHTML = response.address.city || '';
   });
 }
 

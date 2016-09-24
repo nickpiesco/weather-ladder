@@ -244,7 +244,7 @@ function requestWeather (lat, long) {
   // or faff about with a server-side proxy of my own
   var proxy = '//crossorigin.me/';
 
-  var url = proxy + 'https://api.forecast.io/forecast/' + API_KEY + '/' +
+  var url = proxy + 'https://api.darksky.net/forecast/' + API_KEY + '/' +
     lat + ',' + long;
 
   // Make the request
